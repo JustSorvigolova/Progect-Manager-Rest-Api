@@ -11,6 +11,9 @@ class Administrator(models.Model):
 
     name = models.CharField(max_length=25)
 
+    def __str__(self):
+        return self.name
+
     class Meta:
         verbose_name = 'Администратор'
         verbose_name_plural = 'Администраторы'
@@ -18,12 +21,14 @@ class Administrator(models.Model):
 
 class Supervisor(models.Model):
     """ Руководитель проекта """
-
     name = models.CharField(max_length=25)
+
+    def __str__(self):
+        return self.name
 
     class Meta:
         verbose_name = 'Руководитель'
-        verbose_name_plural = 'Задачи'
+        verbose_name_plural = 'Руководители'
 
 
 class Workers(models.Model):
@@ -36,6 +41,9 @@ class Workers(models.Model):
     name = models.CharField(max_length=25)
     role = models.CharField(max_length=15, choices=Role_choice)
 
+    def __str__(self):
+        return self.name
+
     class Meta:
         verbose_name = 'Разработчик'
         verbose_name_plural = 'Разработчики'
@@ -43,8 +51,10 @@ class Workers(models.Model):
 
 class Tasks(models.Model):
     """ Задачи проекта """
-
     task = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.task
 
     class Meta:
         verbose_name = 'Задача'
@@ -60,6 +70,9 @@ class Projects(models.Model):
     date_range = DateRangeField()
     admin = models.OneToOneField(Administrator, on_delete=models.CASCADE)
     task = models.ForeignKey(Tasks, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.title
 
     class Meta:
         constraints = [
