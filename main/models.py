@@ -1,18 +1,19 @@
-from abc import ABC
 from django.contrib.postgres.constraints import ExclusionConstraint
 from django.contrib.postgres.fields import (
-    DateTimeRangeField,
-    RangeBoundary,
     RangeOperators,
 )
 from django.db import models
-from django.db.models import Func, Q
+from django.contrib.postgres.fields import DateRangeField
 
 
 class Administrator(models.Model):
-    """ Руководитель проекта """
+    """ Администратор проекта """
 
     name = models.CharField(max_length=25)
+
+    class Meta:
+        verbose_name = 'Администратор'
+        verbose_name_plural = 'Администраторы'
 
 
 class Supervisor(models.Model):
@@ -40,11 +41,6 @@ class Workers(models.Model):
         verbose_name_plural = 'Разработчики'
 
 
-class TsTzRange(Func, ABC):
-    function = 'TSTZRANGE'
-    output_field = DateTimeRangeField()
-
-
 class Tasks(models.Model):
     """ Задачи проекта """
 
@@ -57,27 +53,22 @@ class Tasks(models.Model):
 
 class Projects(models.Model):
     """  Проект """
-
     title = models.CharField(max_length=25)
     status = models.BooleanField(default=False)
-    start_date = models.DateField()
-    end_date = models.DateField()
     supervisor = models.ForeignKey(Supervisor, on_delete=models.CASCADE)
-    workers = models.ManyToManyField(Workers, on_delete=models.CASCADE)
+    workers = models.ManyToManyField(Workers)
+    date_range = DateRangeField()
     admin = models.OneToOneField(Administrator, on_delete=models.CASCADE)
     task = models.ForeignKey(Tasks, on_delete=models.CASCADE)
 
     class Meta:
         constraints = [
             ExclusionConstraint(
-                name='exclude_overlapping_reservations',
-                expressions=(
-                    (TsTzRange('start_date', 'end_date', RangeBoundary()), RangeOperators.OVERLAPS),
-                    ('room', RangeOperators.EQUAL),
-                ),
-                condition=Q(cancelled=False),
-            ),
-        ]
+                name='exclude_overlap',
+                expressions=[
+                    ('date_range', RangeOperators.OVERLAPS),
+                ],
+            )]
         verbose_name = 'Проект'
         verbose_name_plural = 'Проекты'
 
