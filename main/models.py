@@ -82,5 +82,3 @@ class Projects(models.Model):
         verbose_name_plural = 'Проекты'
 
 
-class Selre(models.Model):
-    name = models.CharField(max_length=20)
