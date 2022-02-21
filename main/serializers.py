@@ -4,6 +4,8 @@ from .models import Projects
 
 class ProjectsSerializer(serializers.ModelSerializer):
     """Все проектов"""
+    workers = serializers.SlugRelatedField(slug_field='name', many=True, read_only=True)
+    task = serializers.SlugRelatedField(slug_field='title', read_only=True, many=True)
 
     class Meta:
         model = Projects
@@ -13,9 +15,7 @@ class ProjectsSerializer(serializers.ModelSerializer):
 class ProjectsDetailSerializer(serializers.ModelSerializer):
     """Список проектов"""
     workers = serializers.SlugRelatedField(slug_field='name', many=True, read_only=True)
-    supervisor = serializers.SlugRelatedField(slug_field='name', read_only=True)
-    admin = serializers.SlugRelatedField(slug_field='name', read_only=True)
-    task = serializers.SlugRelatedField(slug_field='task', read_only=True)
+    task = serializers.SlugRelatedField(slug_field='title', read_only=True, many=True)
 
     class Meta:
         model = Projects
