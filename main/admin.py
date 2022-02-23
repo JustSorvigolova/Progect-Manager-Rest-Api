@@ -1,7 +1,9 @@
 from django.contrib import admin
-from .models import Projects, Workers, Tasks
 
+from . import models
 
-admin.site.register(Projects)
-admin.site.register(Workers)
-admin.site.register(Tasks)
+admin.site.register(models.Projects)
+admin.site.register(models.Tasks)
+admin.site.register(models.Supervisor)
+admin.site.register(models.Developers)
+admin.site.register(models.Comment)
