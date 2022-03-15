@@ -1,8 +1,7 @@
-from .serializers import ProjectsSerializer, CommentCreateSerializer, UserSerializer
-from main.models import Projects, Comment
+from .serializers import ProjectsSerializer
+from main.models import Projects
 from rest_framework.response import Response
 from rest_framework import generics
-from django.contrib.auth.models import User
 
 
 class ProjectList(generics.ListAPIView):
@@ -23,27 +22,5 @@ class ProjectDetail(generics.RetrieveAPIView):
     serializer_class = ProjectsSerializer
 
 
-class UserList(generics.ListAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
 
 
-class UserDetail(generics.RetrieveAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-
-class UserCreateView(generics.ListCreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-    def list(self, request, **kwargs):
-        # Note the use of `get_queryset()` instead of `self.queryset`
-        queryset = self.get_queryset()
-        serializer = UserSerializer(queryset, many=True)
-        return Response(serializer.data)
-
-
-class CommentCreateView(generics.ListCreateAPIView):
-    queryset = Comment.objects.all()
-    serializer_class = CommentCreateSerializer
