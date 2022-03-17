@@ -24,10 +24,9 @@ class Projects(models.Model):
 
 class Tasks(models.Model):
     """ Задачи проекта """
-
     title_task = models.CharField(max_length=50, blank=True)
     date = models.DateTimeField(auto_now=datetime.datetime.now())
-    project = models.ForeignKey(Projects, on_delete=models.CASCADE)
+    project = models.ForeignKey(Projects, on_delete=models.CASCADE, related_name="task")
 
     def __str__(self):
         return self.title_task
@@ -39,8 +38,9 @@ class Tasks(models.Model):
 
 class Comment(models.Model):
     """ Комментарий """
-    text = models.TextField("Текст", max_length=250)
-    parent = models.ForeignKey('self', verbose_name='Родитель', on_delete=models.SET_NULL, blank=True, null=True)
+    text_title = models.TextField("Текст", max_length=250)
+    parent = models.ForeignKey('self', verbose_name='Родитель', on_delete=models.SET_NULL,
+                               blank=True, null=True,related_name="children")
     project = models.ForeignKey(Projects, verbose_name="проект", on_delete=models.CASCADE, related_name="comment")
 
     class Meta:
