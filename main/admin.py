@@ -3,4 +3,4 @@ from . import models
 
 admin.site.register(models.Projects)
 admin.site.register(models.Tasks)
-admin.site.register(models.Comment)
+admin.site.register(models.Comments)

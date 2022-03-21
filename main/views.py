@@ -1,50 +1,47 @@
+from .permissions import IsOwnerOrReadOnly
 from .serializers import ProjectsSerializer, CommentCreateSerializer, TaskSerializer
-from main.models import Projects, Comment, Tasks
-from rest_framework.response import Response
+from main.models import Projects, Comments, Tasks
 from rest_framework import generics
+from rest_framework.permissions import IsAuthenticated, IsAdminUser, IsAuthenticatedOrReadOnly
 
 
-class ProjectListCreate(generics.ListCreateAPIView):
+class ProjectCreate(generics.CreateAPIView):
     queryset = Projects.objects.all()
     serializer_class = ProjectsSerializer
+    permission_classes = [IsAdminUser]
 
-    def list(self, request, **kwargs):
-        queryset = self.get_queryset()
-        serializer = ProjectsSerializer(queryset, many=True)
-        return Response({
-                "data": serializer.data,
-                "success": True,
-            })
+
+class ProjectList(generics.ListAPIView):
+    queryset = Projects.objects.all()
+    serializer_class = ProjectsSerializer
+    permission_classes = [IsOwnerOrReadOnly]
 
 
 class ProjectUpdateRetrieveDelete(generics.RetrieveUpdateDestroyAPIView):
     queryset = Projects.objects.all()
     serializer_class = ProjectsSerializer
+    permission_classes = [IsAdminUser]
 
 
 class CommentListCreate(generics.ListCreateAPIView):
-    queryset = Comment.objects.all()
+    queryset = Comments.objects.all()
     serializer_class = CommentCreateSerializer
+    permission_classes = [IsAuthenticated]
 
-    def list(self, request, **kwargs):
-        queryset = self.get_queryset()
-        serializer = CommentCreateSerializer(queryset, many=True)
-        return Response({
-            "data": serializer.data,
-            "success": True,
-        })
+
+class CommentUpdateRetrieveDelete(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Comments.objects.all()
+    serializer_class = CommentCreateSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 
 class TasksListCreate(generics.ListCreateAPIView):
     queryset = Tasks.objects.all()
     serializer_class = TaskSerializer
-
-    def list(self, request, **kwargs):
-        queryset = self.get_queryset()
-        serializer = TaskSerializer(queryset, many=True)
-        return Response({
-            "data": serializer.data,
-            "success": True,
-        })
+    permission_classes = [IsAuthenticated]
 
 
+class TaskUpdateRetrieveDelete(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Tasks.objects.all()
+    serializer_class = TaskSerializer
+    permission_classes = [IsAuthenticated]
